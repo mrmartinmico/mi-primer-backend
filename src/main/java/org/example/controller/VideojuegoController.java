@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/videojuegos")
 public class VideojuegoController {
@@ -21,7 +22,7 @@ public class VideojuegoController {
         return videojuegoRepository.findAll();
     }
 
-    // 2. OBTENER UN VIDEOJUEGO POR ID (GET http://localhost:8080/api/videojuegos/2)
+    // 2. OBTENER UN VIDEOJUEGO POR ID
     @GetMapping("/{id}")
     public ResponseEntity<Videojuego> obtenerPorId(@PathVariable Long id) {
         return videojuegoRepository.findById(id)
@@ -35,7 +36,7 @@ public class VideojuegoController {
         return videojuegoRepository.save(videojuego);
     }
 
-    // 4. ACTUALIZAR UN VIDEOJUEGO EXISTENTE (PUT http://localhost:8080/api/videojuegos/3)
+    // 4. ACTUALIZAR UN VIDEOJUEGO EXISTENTE
     @PutMapping("/{id}")
     public ResponseEntity<Videojuego> actualizarVideojuego(@PathVariable Long id, @RequestBody Videojuego videojuegoDetalles) {
         return videojuegoRepository.findById(id)
@@ -48,7 +49,7 @@ public class VideojuegoController {
                 }).orElse(ResponseEntity.notFound().build());
     }
 
-    // 5. BORRAR UN VIDEOJUEGO (DELETE http://localhost:8080/api/videojuegos/1)
+    // 5. BORRAR UN VIDEOJUEGO POR ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarVideojuego(@PathVariable Long id) {
         return videojuegoRepository.findById(id)
@@ -56,5 +57,11 @@ public class VideojuegoController {
                     videojuegoRepository.delete(videojuego);
                     return ResponseEntity.ok().<Void>build();
                 }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // 6. AÑADIR MUCHOS VIDEOJUEGOS DE GOLPE
+    @PostMapping("/masivo")
+    public List<Videojuego> guardarMuchosVideojuegos(@RequestBody List<Videojuego> videojuegos) {
+        return videojuegoRepository.saveAll(videojuegos);
     }
 }
